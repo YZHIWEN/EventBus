@@ -1,15 +1,7 @@
 package com.yzw;
 
-import com.squareup.javapoet.JavaFile;
-
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -25,7 +17,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
 
 public final class EventBusProcessor extends AbstractProcessor {
     // 元素操作的辅助类
@@ -65,20 +56,12 @@ public final class EventBusProcessor extends AbstractProcessor {
 
     private void generateSubscribeClass(
             Map<TypeElement, SubscribeClass> targetClassMap) {
-        File file = new File("F://a");
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-
         for (Map.Entry<TypeElement, SubscribeClass> entry : targetClassMap.entrySet()) {
             try {
                 entry.getValue().brewJava().writeTo(filer);
-                entry.getValue().brewJava().writeTo(new File("F:\\"));
             } catch (IOException io) {
             }
         }
-
-
     }
 
     String getFqcn(SubscribeClass subscribeClass, TypeElement typeElement) {
