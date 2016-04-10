@@ -7,7 +7,7 @@ import java.util.List;
  */
 public interface Subscriber<T> {
 
-    void onReceive(String tag, EventBundle bundle);
+    void onReceive(String tag,int priority, EventBundle bundle);
 
     List<String> getTags();
 

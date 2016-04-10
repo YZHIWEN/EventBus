@@ -117,7 +117,7 @@ public class EventBus {
         if (subscriberList == null)
             return;
         for (Subscription subscrption : subscriberList) {
-            subscrption.subscriber.onReceive(tag, bundle);
+            subscrption.subscriber.onReceive(tag, subscrption.priority, bundle);
         }
     }
 

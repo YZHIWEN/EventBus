@@ -72,6 +72,7 @@ public class SubscribeClass {
 
 
     JavaFile brewJava() {
+        // ---------->成员变量
         ClassName string = ClassName.get("java.lang", String.class.getSimpleName());
         ClassName list = ClassName.get("java.util", ArrayList.class.getSimpleName());
         TypeName tagList = ParameterizedTypeName.get(list, string);
@@ -81,10 +82,11 @@ public class SubscribeClass {
         ClassName hashmap = ClassName.get("java.util", HashMap.class.getSimpleName());
         TypeName subscriptionMap = ParameterizedTypeName.get(hashmap, string, subscriptionlist);
 
-        FieldSpec taglist = FieldSpec.builder(tagList, "tagList").initializer("new ArrayList<String>()").build();
-        FieldSpec subscriptionmap = FieldSpec.builder(subscriptionMap, "subscriptionMap").initializer("new HashMap<String,ArrayList<Subscription>>()").build();
-        FieldSpec subscribertarget = FieldSpec.builder(TypeName.get(enclosingElement.asType()), "target").build();
+        FieldSpec tagListField = FieldSpec.builder(tagList, "tagList").initializer("new ArrayList<String>()").build();
+        FieldSpec subscriptionMapField = FieldSpec.builder(subscriptionMap, "subscriptionMap").initializer("new HashMap<String,ArrayList<Subscription>>()").build();
+        FieldSpec subscriberTargetField = FieldSpec.builder(TypeName.get(enclosingElement.asType()), "target").build();
 
+        // ----------->方法
         MethodSpec.Builder inittaglistBuilder = MethodSpec.methodBuilder("initTagList");
         MethodSpec.Builder initsubscriptionMap = MethodSpec.methodBuilder("initSubscriptionMap");
         initsubscriptionMap.addCode("ArrayList<Subscription> subscriptions;\n");
@@ -113,11 +115,6 @@ public class SubscribeClass {
                 .addParameter(Object.class, "target")
                 .addCode("this.target = (" + targetclass + ")target;\n")
                 .build();
-//        for (ArrayList<Subscription> slist : subscriptionMap.values()) {
-//            for (Subscription s : slist) {
-//                s.subscriber = (Subscriber<Object>) target;
-//            }
-//        }
 
         MethodSpec gettags = MethodSpec.methodBuilder("getTags")
                 .addAnnotation(Override.class)
@@ -136,22 +133,23 @@ public class SubscribeClass {
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(Override.class)
                 .addParameter(String.class, "tag")
+                .addParameter(int.class, "priority")
                 .addParameter(EventBundle.class, "bundle");
         for (Map.Entry<String, List<SubscribeMethod>> entry : tagInfoMap.entrySet()) {
             String tag = entry.getKey();
             onreceiveBuilder.addCode("if( tag.equals(\"" + tag + "\") ) {\n");
             for (SubscribeMethod ti : entry.getValue()) {
-                onreceiveBuilder.addCode("      target." + ti.methodName + "(bundle);\n");
+                onreceiveBuilder.addCode("  if( priority == " + ti.priority + " )     target." + ti.methodName + "(bundle);\n");
             }
             onreceiveBuilder.addCode("}\n\n");
         }
 
         TypeSpec.Builder result = TypeSpec.classBuilder(className)
                 .addModifiers(Modifier.PUBLIC)
-                .addField(subscribertarget)
+                .addField(subscriberTargetField)
                 .addSuperinterface(ParameterizedTypeName.get(Subscriber.class))
-                .addField(taglist)
-                .addField(subscriptionmap)
+                .addField(tagListField)
+                .addField(subscriptionMapField)
                 .addMethod(inittaglist)
                 .addMethod(initsubscriptionMap.build())
                 .addMethod(constructor)
