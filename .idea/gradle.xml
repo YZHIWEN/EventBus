@@ -9,8 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/eventbus-all" />
-            <option value="$PROJECT_DIR$/eventbus-annotations" />
+            <option value="$PROJECT_DIR$/eventbus" />
             <option value="$PROJECT_DIR$/eventbus-processor" />
           </set>
         </option>
@@ -18,8 +17,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/eventbus-all" />
-            <option value="$PROJECT_DIR$/eventbus-annotations" />
+            <option value="$PROJECT_DIR$/eventbus" />
             <option value="$PROJECT_DIR$/eventbus-processor" />
           </set>
         </option>
