@@ -140,36 +140,35 @@ public class EventBus {
 
     // TODO: 2016/4/16 0016 how to release EventBundle
     public void post(String tag, EventBundle bundle) {
-        List<Subscription> subscriberList = subscriptionMapbyTag.get(tag);
-        if (subscriberList == null)
-            return;
-
+        List<Subscription> subscriberList = null;
+        Runnable run = null;
         boolean isUIThread = Looper.myLooper() == Looper.getMainLooper();
-        Runnable run;
+        eventqueue.add(tag, bundle);
 
-        if (eventqueue.isPosting.get())
-            return;
+        if (!eventqueue.isPosting.get()) {
+            eventqueue.isPosting.set(true);
+            while (!eventqueue.isEmpty()) {
+                EventQueue.Event event = eventqueue.get();
+                subscriberList = subscriptionMapbyTag.get(event.tag);
+                if (subscriberList == null)
+                    return;
+                for (Subscription subscrption : subscriberList) {
+                    run = subscrption.subscriber.onReceive(tag, subscrption.priority, bundle);
+                    if (run == null)
+                        return;
 
-        for (Subscription subscrption : subscriberList) {
-            run = subscrption.subscriber.onReceive(tag, subscrption.priority, bundle);
-            if (run == null)
-                return;
-
-            eventqueue.add(run);
-
-            if (!eventqueue.isPosting.get()) {
-
-            }
-
-            if (subscrption.threadMode == ThreadMode.UI) {
-                if (isUIThread) {
-                    run.run();
-                } else {
-                    uiScheduler.enqueue(run);
+                    if (subscrption.threadMode == ThreadMode.UI) {
+                        if (isUIThread) {
+                            run.run();
+                        } else {
+                            uiScheduler.enqueue(run);
+                        }
+                    } else if (subscrption.threadMode == ThreadMode.IO) {
+                        ioScheduler.enqueue(run);
+                    }
                 }
-            } else if (subscrption.threadMode == ThreadMode.IO) {
-                ioScheduler.enqueue(run);
             }
+            eventqueue.isPosting.set(false);
         }
     }
 }
