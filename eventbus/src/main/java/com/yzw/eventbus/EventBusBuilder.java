@@ -9,13 +9,13 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 public class EventBusBuilder {
 
-    private final static ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newCachedThreadPool();
+    private final static ExecutorService  DEFAULT_EXECUTOR_SERVICE = Executors.newCachedThreadPool();
 
     boolean isLog = true;
-    ExecutorService executorService = DEFAULT_EXECUTOR_SERVICE;
+    ExecutorService  executorService = DEFAULT_EXECUTOR_SERVICE;
 
 
-    public EventBusBuilder ioScheduler(ExecutorService executorService) {
+    public EventBusBuilder ioScheduler(ExecutorService  executorService) {
         this.executorService = executorService;
         return this;
     }

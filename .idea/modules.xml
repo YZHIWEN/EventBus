@@ -5,7 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/EventBus.iml" filepath="$PROJECT_DIR$/EventBus.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/eventbus/eventbus.iml" filepath="$PROJECT_DIR$/eventbus/eventbus.iml" />
-      <module fileurl="file://$PROJECT_DIR$/eventbus-processor/eventbus-all.iml" filepath="$PROJECT_DIR$/eventbus-processor/eventbus-all.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eventbus-processor/eventbus-processor.iml" filepath="$PROJECT_DIR$/eventbus-processor/eventbus-processor.iml" />
     </modules>
   </component>
 </project>

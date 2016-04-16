@@ -26,7 +26,9 @@ public class MainActivity extends AppCompatActivity {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    EventBus.getEvenBus().post("MainAcS", null);
+                    EventBundle bundle = new EventBundle();
+                    bundle.putString("EEE","EEE");
+                    EventBus.getEvenBus().post("MainAcS", bundle);
                 }
             });
 
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Subscribe(tag = "MainAcS", threadmode = ThreadMode.UI, priority = 22)
     public void s(EventBundle bundle) {
+        Log.e("MainAc", "appEvent: thred "+ Thread.currentThread().toString() );
         Log.e("MainAc", "tag : MainAcS ---- s");
         Toast.makeText(this, "tag mainac", Toast.LENGTH_SHORT).show();
     }
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Subscribe(tag = "MainAcS", threadmode = ThreadMode.UI, priority = 2)
     public void sfejios(EventBundle bundle) {
+        Log.e("MainAc", "appEvent: thred "+ Thread.currentThread().toString() );
         Log.e("MainAc", "tag : MainAcS ---- sfejios");
         Toast.makeText(this, "tag MainAcS", Toast.LENGTH_SHORT).show();
     }

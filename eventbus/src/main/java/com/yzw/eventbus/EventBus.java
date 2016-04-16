@@ -3,6 +3,7 @@ package com.yzw.eventbus;
 import android.os.Looper;
 import android.text.BoringLayout;
 import android.util.Log;
+import android.view.TouchDelegate;
 
 import com.yzw.EventBundle;
 import com.yzw.SubscribeClass;
@@ -26,6 +27,7 @@ public class EventBus {
 
     private UIScheduler uiScheduler;
     private IOScheduler ioScheduler;
+    private EventQueue eventqueue;
 
     // 订阅者：订阅事件类型
     private Map<Object, List<String>> tagsBySubscriber;
@@ -39,6 +41,7 @@ public class EventBus {
     private EventBus(EventBusBuilder busBuilder) {
         tagsBySubscriber = new ConcurrentHashMap<>();
         subscriptionMapbyTag = new ConcurrentHashMap<>();
+        this.eventqueue = EventQueue.getInstance();
         this.uiScheduler = UIScheduler.getInstance();
         this.ioScheduler = IOScheduler.getInstance();
         this.ioScheduler.setExecutorService(busBuilder.executorService);
@@ -135,6 +138,7 @@ public class EventBus {
         }
     }
 
+    // TODO: 2016/4/16 0016 how to release EventBundle
     public void post(String tag, EventBundle bundle) {
         List<Subscription> subscriberList = subscriptionMapbyTag.get(tag);
         if (subscriberList == null)
@@ -142,10 +146,20 @@ public class EventBus {
 
         boolean isUIThread = Looper.myLooper() == Looper.getMainLooper();
         Runnable run;
+
+        if (eventqueue.isPosting.get())
+            return;
+
         for (Subscription subscrption : subscriberList) {
             run = subscrption.subscriber.onReceive(tag, subscrption.priority, bundle);
             if (run == null)
                 return;
+
+            eventqueue.add(run);
+
+            if (!eventqueue.isPosting.get()) {
+
+            }
 
             if (subscrption.threadMode == ThreadMode.UI) {
                 if (isUIThread) {
