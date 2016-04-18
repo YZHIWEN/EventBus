@@ -29,14 +29,8 @@ public class EventBus {
     private IOScheduler ioScheduler;
     private EventQueue eventqueue;
 
-    // 订阅者：订阅事件类型
     private Map<Object, List<String>> tagsBySubscriber;
-    // Tag代理对象的集合，需要按照优先级排序
     private Map<String, List<Subscription>> subscriptionMapbyTag;
-
-//    private Map<Class, Object> targetMap;
-//    // 对象的代理类集合；K：注册EventBus对象String，V:K的代理对象
-//    private Map<String, Subscriber<Object>> targetProxyMap;
 
     private EventBus(EventBusBuilder busBuilder) {
         tagsBySubscriber = new ConcurrentHashMap<>();

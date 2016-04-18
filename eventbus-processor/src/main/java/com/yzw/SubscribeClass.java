@@ -22,18 +22,12 @@ public class SubscribeClass {
     String PACKAGE_NAME;
     public final static String CLASS_SUFFIX = "$$Subscriber";
 
-    // Subscriber所在类
     TypeElement enclosingElement;
-    // 生成的类名
     String className;
-    // Tag集合
     Set<String> tags;
-    // Tag：按优先级排序的TagInfo
     Map<String, List<SubscribeMethod>> tagInfoMap;
 
-    // 订阅者包名
     String sub;
-    // 订阅者对象类型
     String s;
     String targetclass;
 
@@ -45,9 +39,7 @@ public class SubscribeClass {
         this.tagInfoMap = new HashMap<String, List<SubscribeMethod>>();
 
         PACKAGE_NAME = enclosingElement.getEnclosingElement().toString();
-        // 订阅者包名
         sub = enclosingElement.getQualifiedName().toString();
-        // 订阅者对象类型
         s = sub.substring(0, sub.lastIndexOf("."));
         targetclass = sub.substring(sub.lastIndexOf(".") + 1);
     }
@@ -73,7 +65,6 @@ public class SubscribeClass {
 
 
     JavaFile brewJava() {
-        // ---------->成员变量
         ClassName string = ClassName.get("java.lang", String.class.getSimpleName());
         ClassName list = ClassName.get("java.util", ArrayList.class.getSimpleName());
         TypeName tagList = ParameterizedTypeName.get(list, string);
@@ -87,7 +78,6 @@ public class SubscribeClass {
         FieldSpec subscriptionMapField = FieldSpec.builder(subscriptionMap, "subscriptionMap").initializer("new HashMap<String,ArrayList<Subscription>>()").build();
         FieldSpec subscriberTargetField = FieldSpec.builder(TypeName.get(enclosingElement.asType()), "target").build();
 
-        // ----------->方法
         MethodSpec.Builder inittaglistBuilder = MethodSpec.methodBuilder("initTagList");
         MethodSpec.Builder initsubscriptionMap = MethodSpec.methodBuilder("initSubscriptionMap");
         initsubscriptionMap.addCode("ArrayList<Subscription> subscriptions;\n");

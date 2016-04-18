@@ -8,6 +8,8 @@ buildscript {
         classpath 'com.android.tools.build:gradle:2.1.0-alpha4'
 
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+
+        classpath 'com.novoda:bintray-release:0.3.4'//添加
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -21,4 +23,16 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+
+//添加
+ext {
+    userOrg = 'yzhiwen'
+    groupId = 'com.yzw'
+    uploadName = 'EventBus'
+    publishVersion = '0.9.0'
+    desc = 'The nearly compile time of Android Event Bus by annotation '
+    website = 'https://github.com/YZHIWEN/EventBus'
+    licences = ['Apache-2.0']
 }
